@@ -1,0 +1,34 @@
+name: Extract Python from LLSP3 files
+
+on:
+  push:
+    paths-ignore:
+      - "code/txt/**"
+
+permissions:
+  contents: write
+
+jobs:
+  extract-python:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Extract projectbody.json Python code
+        run: python3 .github/scripts/extract-llsp3.py
+
+      - name: Commit generated text files
+        run: |
+          if git diff --quiet -- code/txt; then
+            echo "No generated files changed."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add code/txt
+          git commit -m "chore: extract Python code from LLSP3 files"
+          git push
