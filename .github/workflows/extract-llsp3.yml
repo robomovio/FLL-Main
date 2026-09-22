@@ -32,5 +32,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add code/txt
-          git commit -m "chore: extract Python code from LLSP3 files"
+          source_subject="$(git log -1 --format=%s)"
+          git commit -m ${source_subject}
           git push
