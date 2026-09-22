@@ -1,1 +1,0 @@
-write a github workflow that automatically extracts the python code from .llsp3 files and saves them as .txt files in a diretory named "txt" in the "code" directory under the same file name on pushes.
