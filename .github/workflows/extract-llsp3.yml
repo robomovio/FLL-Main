@@ -1,37 +1,14 @@
-name: Extract Python from LLSP3 files
-
-on:
-  push:
-    paths:
-      - "**/*.llsp3"
-      - ".github/workflows/extract-llsp3.yml"
-      - ".github/scripts/extract-llsp3.py"
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  extract-python:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Verify extraction script
-        run: test -f "$GITHUB_WORKSPACE/.github/scripts/extract-llsp3.py"
-
-      - name: Extract projectbody.json Python code
-        run: python3 "$GITHUB_WORKSPACE/.github/scripts/extract-llsp3.py"
-
       - name: Commit generated text files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add code/txt
+
+          if git diff --cached --quiet; then
+            echo "No generated files changed."
+            exit 0
+          fi
+
           source_subject="$(git log -1 --format=%s)"
-          git commit -m ${source_subject}
+          git commit -m "$source_subject"
           git push
