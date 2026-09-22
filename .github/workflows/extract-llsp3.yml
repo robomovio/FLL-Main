@@ -2,23 +2,30 @@ name: Extract Python from LLSP3 files
 
 on:
   push:
-    paths-ignore:
-      - "code/txt/**"
+    paths:
+      - "**/*.llsp3"
+      - ".github/workflows/extract-llsp3.yml"
+      - ".github/scripts/extract-llsp3.py"
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   extract-python:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify extraction script
+        run: test -f "$GITHUB_WORKSPACE/.github/scripts/extract-llsp3.py"
 
       - name: Extract projectbody.json Python code
-        run: python3 .github/scripts/extract-llsp3.py
+        run: python3 "$GITHUB_WORKSPACE/.github/scripts/extract-llsp3.py"
 
       - name: Commit generated text files
         run: |
