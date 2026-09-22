@@ -16,6 +16,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify extraction script
+        run: test -f "$GITHUB_WORKSPACE/.github/scripts/extract-llsp3.py"
+
+      - name: Extract projectbody.json Python code
+        run: python3 "$GITHUB_WORKSPACE/.github/scripts/extract-llsp3.py"
+
       - name: Commit generated text files
         run: |
           git config user.name "github-actions[bot]"
