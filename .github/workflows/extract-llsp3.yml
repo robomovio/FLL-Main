@@ -1,3 +1,21 @@
+name: Extract Python from LLSP3 files
+
+on:
+  push:
+    paths:
+      - "**/*.llsp3"
+      - ".github/workflows/extract-llsp3.yml"
+      - ".github/scripts/extract-llsp3.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract-python:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Commit generated text files
         run: |
           git config user.name "github-actions[bot]"
